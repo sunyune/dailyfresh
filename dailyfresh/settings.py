@@ -30,11 +30,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'tinymce',  # 使用富文本编辑框
+    'haystack',  # 注册全文检索框架
     'cart',
     'goods',
     'order',
     'user',
-    'tinymce',  #使用富文本编辑框
+
 ]
 
 MIDDLEWARE = [
@@ -155,7 +157,7 @@ EMAIL_FROM = '天天生鲜<zhenheweiwei@163.com>'
 
 # Django的缓存配置
 CACHES = {
-    "default":{
+    "default": {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": "redis://192.168.6.109:6379/9",
         "OPTIONS": {
@@ -177,3 +179,19 @@ FDFS_CLIENT_CONF = './utils/fdfs/client.conf'
 
 # 设置fdfs存储服务器上nginx的IP和port
 FDFS_URL = 'http://192.168.6.109:8888'
+
+# 全文检索配置
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        # 使用whoosh引擎
+        # 'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        # 索引文件路径
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+
+# 当添加、修改、删除数据时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+# 搜索结果默认显示个数，默认为20
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 10
